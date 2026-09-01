@@ -2,14 +2,13 @@ package com.ewoudje.ism
 
 import com.ewoudje.ism.blocks.IsmBlocks
 import com.ewoudje.ism.blockentities.IsmBlockEntities
-import com.ewoudje.ism.capabilities.ShizoCapability
-import com.ewoudje.ism.capabilities.IsmCapabilities
 import com.ewoudje.ism.client.SpookyVisions
 import com.ewoudje.ism.items.IsmItems
 import com.ewoudje.ism.networking.IsmPackets
 import com.ewoudje.ism.world.IsmWorldHandler
 import com.ewoudje.ism.world.IsmWorldState.Companion.ismWorldState
-import com.ewoudje.ism.world.fog.FogHandler
+import com.ewoudje.ism.features.fog.FogFeature
+import com.ewoudje.ism.features.shizo.ShizoFeature
 import com.ewoudje.ism.world.structures.IsmStructurePieces
 import com.ewoudje.ism.world.structures.IsmStructures
 import com.ewoudje.ism.world.structures.processor.IsmStructureProcessors
@@ -51,14 +50,16 @@ object IsmMod {
         IsmStructurePieces.REGISTRY.register(MOD_BUS)
         IsmStructureProcessors.REGISTRY.register(MOD_BUS)
         IsmEffects.REGISTRY.register(MOD_BUS)
+        IsmAttachments.REGISTRY.register(MOD_BUS)
+
+        ShizoFeature.register(MOD_BUS)
+        FogFeature.register(MOD_BUS)
 
         MOD_BUS.addListener(IsmCapabilities::registerCapabilities)
         MOD_BUS.addListener(IsmAttributes::registerAttributes)
         MOD_BUS.addListener(IsmPackets::register)
         MOD_BUS.addListener(::registerRegistries)
 
-        FORGE_BUS.addListener(ShizoCapability::tickPlayer)
-        FORGE_BUS.addListener(FogHandler::tick)
         FORGE_BUS.addListener(::registerCommands)
 
         IsmWorldHandler.register()

@@ -1,4 +1,4 @@
-package com.ewoudje.ism.world.fog
+﻿package com.ewoudje.ism.features.fog
 
 import com.ewoudje.ism.world.IsmWorldState.Companion.ismWorldState
 import net.minecraft.core.BlockPos

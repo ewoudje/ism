@@ -1,6 +1,6 @@
 package com.ewoudje.ism.world
 
-import com.ewoudje.ism.world.fog.FogState
+import com.ewoudje.ism.features.fog.FogState
 import net.minecraft.core.HolderLookup
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel

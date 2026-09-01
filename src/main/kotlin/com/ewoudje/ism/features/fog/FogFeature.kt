@@ -1,4 +1,4 @@
-package com.ewoudje.ism.world.fog
+﻿package com.ewoudje.ism.features.fog
 
 import com.ewoudje.ism.IsmAttributes
 import com.ewoudje.ism.networking.FogUpdatePacket
@@ -6,17 +6,29 @@ import com.ewoudje.ism.resource
 import com.ewoudje.ism.world.IsmWorldState.Companion.ismWorldState
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
+import net.neoforged.bus.api.IEventBus
+import net.neoforged.bus.api.SubscribeEvent
+import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.event.tick.ServerTickEvent
 import net.neoforged.neoforge.network.PacketDistributor
 import org.joml.Vector3d
 import org.joml.Vector3f
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.toVector3d
 
-object FogHandler {
-    private val FOG_ATTRIBUTE_MODIFIER = AttributeModifier("fog".resource, 1.0, AttributeModifier.Operation.ADD_VALUE)
+object FogFeature {
+    private val SANITY_ATTRIBUTE_MODIFIER = AttributeModifier(
+        "fog".resource,
+        -10.0,
+        AttributeModifier.Operation.ADD_VALUE
+    )
     private var tickCounter = 0
 
-    fun tick(event: ServerTickEvent.Post) {
+    fun register(modBus: IEventBus) {
+        NeoForge.EVENT_BUS.register(this)
+    }
+
+    @SubscribeEvent
+    private fun tick(event: ServerTickEvent.Post) {
         tickCounter++
 
         val level = event.server.overworld()
@@ -41,7 +53,6 @@ object FogHandler {
         fog.position = fogPos.add(fog.velocity)
 
 
-
         if (tickCounter >= 5 && fog.consumeNetworkDirty()) {
             sendFogUpdate(level, fog)
             tickCounter = 0
@@ -49,9 +60,9 @@ object FogHandler {
 
         level.players().forEach { p ->
             if (fog.isInFog(p.position().toVector3d())) {
-                p.getAttribute(IsmAttributes.IN_FOG)?.addOrUpdateTransientModifier(FOG_ATTRIBUTE_MODIFIER)
+                p.getAttribute(IsmAttributes.SANITY)?.addOrUpdateTransientModifier(SANITY_ATTRIBUTE_MODIFIER)
             } else {
-                p.getAttribute(IsmAttributes.IN_FOG)?.removeModifier(FOG_ATTRIBUTE_MODIFIER)
+                p.getAttribute(IsmAttributes.SANITY)?.removeModifier(SANITY_ATTRIBUTE_MODIFIER)
             }
         }
 
@@ -65,7 +76,6 @@ object FogHandler {
     }
 
     private fun sendFogUpdate(level: ServerLevel, fog: FogState) {
-        val pos = fog.position
         val payload = FogUpdatePacket(fog)
         PacketDistributor.sendToAllPlayers(payload)
     }

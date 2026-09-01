@@ -4,7 +4,7 @@ import com.ewoudje.ism.client.IsmSounds
 import com.ewoudje.ism.client.particles.IsmParticles
 import com.ewoudje.ism.client.particles.UnsealParticleProvider
 import com.ewoudje.ism.world.IsmWorldState.Companion.ismWorldState
-import com.ewoudje.ism.world.fog.FogUnsealedSpawner
+import com.ewoudje.ism.features.fog.FogUnsealedSpawner
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.core.BlockPos

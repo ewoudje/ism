@@ -1,6 +1,6 @@
-package com.ewoudje.ism.world.fog
+﻿package com.ewoudje.ism.features.fog
 
-import com.ewoudje.ism.IsmMod.VECTOR3D_CODEC
+import com.ewoudje.ism.IsmMod
 import com.ewoudje.ism.IsmMod.nullable
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.codec.ByteBufCodecs
@@ -99,7 +99,7 @@ class FogState(
 
     companion object {
         val STREAM_CODEC = StreamCodec.composite(
-            VECTOR3D_CODEC.nullable(),
+            IsmMod.VECTOR3D_CODEC.nullable(),
             FogState::position,
             ByteBufCodecs.VECTOR3F,
             FogState::direction,

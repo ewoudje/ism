@@ -1,20 +1,20 @@
-package com.ewoudje.ism.networking
-
+﻿package com.ewoudje.ism.networking
 
 import com.ewoudje.ism.client.ClientFogHandler
-import com.ewoudje.ism.resource
 import com.ewoudje.ism.features.fog.FogState
+import com.ewoudje.ism.features.shizo.client.ShizoChestFeature
+import com.ewoudje.ism.resource
+import net.minecraft.core.BlockPos
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.neoforged.neoforge.network.handling.IPayloadContext
 
-data class FogUpdatePacket(
-    val fogState: FogState
-) : CustomPacketPayload {
+class FakeChestPacket(val blockPos: BlockPos) : CustomPacketPayload {
     override fun type(): CustomPacketPayload.Type<FogUpdatePacket> = TYPE
 
     fun handle(ctx: IPayloadContext) {
-        ClientFogHandler.updateFog(fogState)
+        ShizoChestFeature.trigger(blockPos);
     }
+
 
     companion object {
         val TYPE = CustomPacketPayload.Type<FogUpdatePacket>("fog_update".resource)

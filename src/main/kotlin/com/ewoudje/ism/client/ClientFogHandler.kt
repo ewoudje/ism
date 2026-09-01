@@ -2,7 +2,7 @@ package com.ewoudje.ism.client
 
 import com.ewoudje.ism.client.particles.IsmParticles
 import com.ewoudje.ism.client.renderers.RollingFogRenderer
-import com.ewoudje.ism.world.fog.FogState
+import com.ewoudje.ism.features.fog.FogState
 import net.minecraft.client.Minecraft
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import org.joml.Vector3d
