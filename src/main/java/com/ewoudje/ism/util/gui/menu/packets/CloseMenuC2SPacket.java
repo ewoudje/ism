@@ -6,12 +6,12 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public record CloseMenuS2CPacket(int id) implements CustomPacketPayload {
+public record CloseMenuC2SPacket(int id) implements CustomPacketPayload {
 
-    public static final Type<CloseMenuS2CPacket> TYPE = IsmPackets.type("close_menu");
-    public static StreamCodec<RegistryFriendlyByteBuf, CloseMenuS2CPacket> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.VAR_INT, CloseMenuS2CPacket::id,
-            CloseMenuS2CPacket::new
+    public static final Type<CloseMenuC2SPacket> TYPE = IsmPackets.type("close_menu_c2s");
+    public static StreamCodec<RegistryFriendlyByteBuf, CloseMenuC2SPacket> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT, CloseMenuC2SPacket::id,
+            CloseMenuC2SPacket::new
     );
 
     @Override

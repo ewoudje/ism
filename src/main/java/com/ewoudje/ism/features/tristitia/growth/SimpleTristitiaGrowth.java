@@ -1,7 +1,6 @@
 package com.ewoudje.ism.features.tristitia.growth;
 
 import com.ewoudje.ism.collections.IsmBlocks;
-import com.ewoudje.ism.collections.IsmCapabilities;
 import com.ewoudje.ism.features.growth.GrowingProposal;
 import com.ewoudje.ism.features.growth.GrowthCapability;
 import com.ewoudje.ism.features.growth.GrowthContext;
@@ -16,17 +15,16 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class SimpleVineGrowth implements GrowthCapability {
-    public static final SimpleVineGrowth INSTANCE = new SimpleVineGrowth();
+public class SimpleTristitiaGrowth implements GrowthCapability {
+    public static final SimpleTristitiaGrowth INSTANCE = new SimpleTristitiaGrowth();
     private final Map<BlockState, Set<Direction>> sidesToCheck = new HashMap<>();
     private final BlockPos.MutableBlockPos scratchPos = new BlockPos.MutableBlockPos();
     private final TristitiaClingyGrowthBlock block = IsmBlocks.TRISTITIA_VINE_GROWTH.get();
 
-    private SimpleVineGrowth() {
+    private SimpleTristitiaGrowth() {
         for (var state : block.getStateDefinition().getPossibleStates()) {
             Set<Direction> toCheck = new HashSet<>();
 
@@ -50,7 +48,7 @@ public class SimpleVineGrowth implements GrowthCapability {
         var sample = ctx.sample();
         if (sample == null) return -1;
         if (sample.density() < 1) return -1;
-        if (ctx.growthTarget() == null) return -1;
+        if (ctx.growthTarget() == null && ctx.selfProposal() == null) return -1;
         if (sample.closest().availableEnergy() < 100) return 100;
 
         if (sample.density() > 70) return 15;
@@ -79,6 +77,28 @@ public class SimpleVineGrowth implements GrowthCapability {
         return new GrowingProposal(IsmBlocks.TRISTITIA_VINE_GROWTH.get(), 10);
     }
 
+    @Override
+    public @Nullable GrowingProposal selfGrowthProposal(GrowthContext ctx) {
+        var sample = ctx.sample();
+        if (sample == null) return null;
+        if (sample.density() < 60) return null;
+        if (sample.closest().availableEnergy() < 500) return null;
+
+        boolean isNextToSeal = IsmBlocks.TRISTITIA_VINE_GROWTH.get().getFaces(ctx.state()).anyMatch(d -> {
+            var state = ctx.getBlockState(ctx.pos().relative(d));
+            return state.is(IsmBlocks.TRISTITIA_CORE.get())
+                    || state.is(IsmBlocks.TRISTITIA_SEAL_HOLE.get())
+                    || state.is(IsmBlocks.SEAL_STONE.get());
+        });
+
+        if (ctx.state().is(IsmBlocks.TRISTITIA_CORE_GROWTH.get()) && isNextToSeal) return null;
+        if (ctx.state().is(IsmBlocks.TRISTITIA_GRASS_GROWTH.get()) && !isNextToSeal) return null;
+
+        return isNextToSeal
+                ? new GrowingProposal(IsmBlocks.TRISTITIA_CORE_GROWTH.get(), 400)
+                : new GrowingProposal(IsmBlocks.TRISTITIA_GRASS_GROWTH.get(), 50);
+    }
+
     private @Nullable BlockPos checkDirection(GrowthContext ctx, Direction direction, Set<Direction> toCheck) {
         ServerLevel level = ctx.level();
 
@@ -87,22 +107,22 @@ public class SimpleVineGrowth implements GrowthCapability {
 
             scratchPos.setWithOffset(ctx.pos(), checkDirection);
             var state = level.getBlockState(scratchPos);
-            if (state.is(IsmBlocks.TRISTITIA_VINE_GROWTH.get())) continue;
+            if (state.getBlock() instanceof TristitiaClingyGrowthBlock) continue;
 
             if (!state.isSolidRender() && state.getFluidState().isEmpty()) {
                 if (checkIfPlaceable(ctx, scratchPos, direction))
-                    return new BlockPos(scratchPos);
+                    return scratchPos.immutable();
             }
 
             if (state.isSolidRender()) continue;
 
             scratchPos.move(direction);
             state = level.getBlockState(scratchPos);
-            if (state.is(IsmBlocks.TRISTITIA_VINE_GROWTH.get())) continue;
+            if (state.getBlock() instanceof TristitiaClingyGrowthBlock) continue;
 
             if (!state.isSolidRender() && state.getFluidState().isEmpty()) {
                 if (checkIfPlaceable(ctx, scratchPos, checkDirection.getOpposite()))
-                    return new BlockPos(scratchPos);
+                    return scratchPos.immutable();
             }
         }
 

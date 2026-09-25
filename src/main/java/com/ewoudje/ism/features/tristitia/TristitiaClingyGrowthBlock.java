@@ -1,10 +1,12 @@
 package com.ewoudje.ism.features.tristitia;
 
+import com.ewoudje.ism.util.math.FlatDirection;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import com.mojang.serialization.MapCodec;
+import com.mojang.math.OctahedralGroup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -28,26 +30,27 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class TristitiaVineGrowthBlock extends TristitiaGrowthBlock implements TristitiaGrowth {
-    public static final MapCodec<TristitiaVineGrowthBlock> CODEC = simpleCodec(TristitiaVineGrowthBlock::new);
+public class TristitiaClingyGrowthBlock extends TristitiaGrowthBlock {
     public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
     public static final BooleanProperty EAST = BlockStateProperties.EAST;
     public static final BooleanProperty SOUTH = BlockStateProperties.SOUTH;
     public static final BooleanProperty WEST = BlockStateProperties.WEST;
     public static final BooleanProperty UP = BlockStateProperties.UP;
     public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
-    public static final Map<Direction, BooleanProperty> PROPERTY_BY_DIRECTION =  ImmutableMap.copyOf(
+    public static final Map<Direction, BooleanProperty> PROPERTY_BY_DIRECTION = ImmutableMap.copyOf(
             Maps.newEnumMap(
                     Map.of(Direction.NORTH, NORTH, Direction.EAST, EAST, Direction.SOUTH, SOUTH, Direction.WEST, WEST, Direction.UP, UP, Direction.DOWN, DOWN)
             )
     );
 
     private final Function<BlockState, VoxelShape> shapes;
+    private final float thickness;
 
-    public TristitiaVineGrowthBlock(Properties properties) {
+    public TristitiaClingyGrowthBlock(Properties properties, float thickness) {
         super(properties);
+        this.thickness = thickness;
 
-        Map<Direction, VoxelShape> shapes = Shapes.rotateAll(Block.boxZ(16.0, 0.0, 1.0));
+        Map<Direction, VoxelShape> shapes = Shapes.rotateAll(Block.boxZ(16.0, 0.0, thickness));
         this.shapes = getShapeForEachState(state -> {
             VoxelShape shape = Shapes.empty();
 
@@ -74,6 +77,16 @@ public class TristitiaVineGrowthBlock extends TristitiaGrowthBlock implements Tr
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return getExpensiveShape(level, pos, state);
+    }
+
+    @Override
+    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return shapes.apply(state);
+    }
+
+    @Override
+    protected VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return shapes.apply(state);
     }
 
@@ -134,6 +147,49 @@ public class TristitiaVineGrowthBlock extends TristitiaGrowthBlock implements Tr
         return anyFaces(blockState) ? blockState : Blocks.AIR.defaultBlockState();
     }
 
+    @Override
+    public BlockState getStateForGrowth(ServerLevel level, BlockPos pos, RandomSource random) {
+        return getUpdatedState(level, pos);
+    }
+
+    private VoxelShape getExpensiveShape(BlockGetter level, BlockPos pos, BlockState state) {
+        return getFaces(state).map(dir -> {
+            double xMin = 0, yMin = 0, xMax = 0, yMax = 0;
+
+            for (FlatDirection side : FlatDirection.values()) {
+                double value = 14.0;
+                if (state.getValue(PROPERTY_BY_DIRECTION.get(side.moveDirection(dir)))
+                        || isFaceFlatConnected(level, pos, dir, side)) {
+                    value = 16.0;
+                } else if (isFaceCornerConnected(level, pos, dir, side, thickness)) {
+                    value = 16.0 + thickness;
+                }
+
+                switch (side) {
+                    case UP -> yMax = value;
+                    case DOWN -> yMin = 16.0 - value;
+                    case LEFT -> xMin = 16.0 - value;
+                    case RIGHT -> xMax = value;
+                }
+            }
+
+            return Shapes.rotate(
+                    Block.box(
+                            xMin, yMin, 0,
+                            xMax, yMax, thickness
+                    ),
+                    switch (dir) {
+                        case NORTH -> OctahedralGroup.IDENTITY;
+                        case EAST -> OctahedralGroup.BLOCK_ROT_Y_90;
+                        case SOUTH -> OctahedralGroup.BLOCK_ROT_Y_180;
+                        case WEST -> OctahedralGroup.BLOCK_ROT_Y_270;
+                        case UP -> OctahedralGroup.BLOCK_ROT_X_270;
+                        case DOWN -> OctahedralGroup.BLOCK_ROT_X_90;
+                    }
+            );
+        }).reduce(Shapes.empty(), Shapes::or);
+    }
+
     private BlockState getUpdatedState(BlockGetter level, BlockPos pos) {
         BlockState state = defaultBlockState();
 
@@ -144,18 +200,37 @@ public class TristitiaVineGrowthBlock extends TristitiaGrowthBlock implements Tr
         return state;
     }
 
-    private boolean anyFaces(BlockState state) {
+    public boolean anyFaces(BlockState state) {
         return getFaces(state).findAny().isPresent();
     }
 
-    private Stream<Direction> getFaces(BlockState state) {
+    public Stream<Direction> getFaces(BlockState state) {
         return PROPERTY_BY_DIRECTION.entrySet().stream()
                 .filter(entry -> state.getValue(entry.getValue()))
                 .map(Map.Entry::getKey);
     }
 
-    @Override
-    public MapCodec<TristitiaVineGrowthBlock> codec() {
-        return CODEC;
+    public float thickness() {
+        return thickness;
+    }
+
+    public static boolean isFaceFlatConnected(BlockGetter level, BlockPos pos, Direction face, FlatDirection direction) {
+        Direction combinedDir = direction.moveDirection(face);
+        BlockPos step = pos.relative(combinedDir);
+        BlockState blockState = level.getBlockState(step);
+
+        if (blockState.getBlock() instanceof TristitiaClingyGrowthBlock) {
+            return blockState.getValue(PROPERTY_BY_DIRECTION.get(face));
+        } else return false;
+    }
+
+    public static boolean isFaceCornerConnected(BlockGetter level, BlockPos pos, Direction face, FlatDirection direction, float thickness) {
+        Direction combinedDir = direction.moveDirection(face);
+        BlockPos step = pos.relative(combinedDir);
+        BlockState blockState = level.getBlockState(step.relative(face));
+
+        if (blockState.getBlock() instanceof TristitiaClingyGrowthBlock b) {
+            return b.thickness >= thickness && blockState.getValue(PROPERTY_BY_DIRECTION.get(combinedDir.getOpposite()));
+        } else return false;
     }
 }

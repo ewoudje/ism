@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "ism:block/sealstone"
+    "all": "ism:block/tristitia_core_diagonal"
   }
 }

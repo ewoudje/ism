@@ -1,4 +1,4 @@
-package com.ewoudje.ism.features.tristitia.growth;
+package com.ewoudje.ism.features.growth;
 
 import com.ewoudje.ism.features.tristitia.TristitiaGrowthBlock;
 

@@ -1,21 +1,18 @@
 package com.ewoudje.ism.features.tristitia.poi;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.util.ExtraCodecs;
-import org.joml.Vector3dc;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Set;
+public interface TristitiaRootPOI extends TristitiaPOI {
 
-public interface TristitiaPOI {
+    float aggressiveness();
 
-    Vector3dc center();
+    @Override
+    default @Nullable TristitiaPOI parent() {
+        return null;
+    }
 
-    double density();
-    int retrieveEnergy(int requested);
-    int availableEnergy();
-
-    Set<TristitiaPOI> children();
-    @Nullable TristitiaPOI parent();
+    @Override
+    default TristitiaRootPOI getRoot() {
+        return this;
+    }
 }

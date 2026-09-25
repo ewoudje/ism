@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:set_components",
+  "components": {
+    "ism:creator": {
+      "meta": "your other friend"
+    },
+    "ism:note": "ism:unseal"
+  }
+}

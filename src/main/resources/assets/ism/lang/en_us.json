@@ -1,5 +1,21 @@
 {
-  "itemGroup.ism": "Example Mod Tab",
-  "block.ism.example_block": "Example Block",
-  "item.ism.example_item": "Example Item"
+  "item.ism.sad_seed": "Sad Seed",
+  "item.ism.note": "Note",
+  "item.ism.notebook": "Notebook",
+  "item.ism.tristitia_growth_bundle": "Tristitia Growth Bundle",
+  "item.ism.tristitia_vine_growth_bundle": "Tristitia Vine Growth Bundle",
+  "item.ism.alchemy_table": "Alchemy Table",
+  "item.ism.sealing_chains": "Sealing Chains",
+  "item.ism.sealing_rocks": "Sealing Rocks",
+
+  "item.ism.creator": "Creator: %s",
+  "item.ism.author": "Author: %s",
+  "item.ism.hold_to_add_to_notebook": "Hold [%s] to catalogue it",
+
+  "gui.ism.add_to_notebook": "Add to your notebook",
+  "block.ism.bed.tristitia_no_sleep": "You try to sleep but wake up in a panic attack...",
+
+  "container.ism.alchemy_table": "Alchemy Table",
+
+  "entity.ism.tristitia_frog": "purple frog?"
 }

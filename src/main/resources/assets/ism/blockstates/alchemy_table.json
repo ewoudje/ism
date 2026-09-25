@@ -1,7 +1,34 @@
 {
   "variants": {
-    "": {
-      "model": "ism:block/sealstone"
+    "facing=east,half=lower": {
+      "model": "ism:block/alchemy_table_lower"
+    },
+    "facing=east,half=upper": {
+      "model": "ism:block/alchemy_table_upper"
+    },
+    "facing=north,half=lower": {
+      "model": "ism:block/alchemy_table_lower",
+      "y": 270
+    },
+    "facing=north,half=upper": {
+      "model": "ism:block/alchemy_table_upper",
+      "y": 270
+    },
+    "facing=south,half=lower": {
+      "model": "ism:block/alchemy_table_lower",
+      "y": 90
+    },
+    "facing=south,half=upper": {
+      "model": "ism:block/alchemy_table_upper",
+      "y": 90
+    },
+    "facing=west,half=lower": {
+      "model": "ism:block/alchemy_table_lower",
+      "y": 180
+    },
+    "facing=west,half=upper": {
+      "model": "ism:block/alchemy_table_upper",
+      "y": 180
     }
   }
 }

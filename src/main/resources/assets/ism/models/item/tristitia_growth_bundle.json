@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ism:item/note"
+    "layer0": "ism:item/tristitia_growth_bundle"
   }
 }

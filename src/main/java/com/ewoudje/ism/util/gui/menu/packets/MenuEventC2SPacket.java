@@ -6,16 +6,18 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public record MenuEventS2CPacket(ByteBuf data) implements CustomPacketPayload {
-    public static final Type<MenuEventS2CPacket> TYPE = IsmPackets.type("menu_event_s2c");
-    public static final StreamCodec<ByteBuf, MenuEventS2CPacket> STREAM_CODEC = StreamCodec.of(
+public record MenuEventC2SPacket(ByteBuf data) implements CustomPacketPayload {
+    public static final Type<MenuEventC2SPacket> TYPE = IsmPackets.type("menu_event_c2s");
+    public static final StreamCodec<ByteBuf, MenuEventC2SPacket> STREAM_CODEC = StreamCodec.of(
             (output, value) -> {
-                output.writeInt(value.data().readableBytes());
+                ByteBuf buf = value.data();
+                buf.setIndex(0, buf.writerIndex());
+                output.writeInt(buf.readableBytes());
                 output.writeBytes(value.data());
             },
             input -> {
                 int size = input.readInt();
-                return new MenuEventS2CPacket(input.readBytes(size));
+                return new MenuEventC2SPacket(input.readBytes(size));
             }
     );
 

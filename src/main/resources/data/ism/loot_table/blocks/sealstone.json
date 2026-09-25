@@ -1,0 +1,48 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "minecraft:survives_explosion"
+          },
+          {
+            "type": "minecraft:random_chance",
+            "chance": 0.4
+          }
+        ]
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "ism:sealing_chains"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "minecraft:survives_explosion"
+          },
+          {
+            "type": "minecraft:random_chance",
+            "chance": 0.4
+          }
+        ]
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "ism:sealing_rocks"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "ism:blocks/sealstone"
+}

@@ -1,4 +1,4 @@
-package com.ewoudje.ism.util.world;
+package com.ewoudje.ism.util.server;
 
 public class NotOnServerException extends RuntimeException {
     public NotOnServerException() {

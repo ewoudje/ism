@@ -1,25 +1,37 @@
 package com.ewoudje.ism.features.note;
 
+import com.ewoudje.ism.Ism;
+import com.ewoudje.ism.collections.IsmRegistries;
 import com.mojang.serialization.Codec;
-import io.netty.buffer.ByteBuf;
+import net.minecraft.core.Registry;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 
-public sealed interface NoteData {
-    Codec<NoteData> CODEC = Codec.STRING.fieldOf("type").dispatch(
-            data -> "overlay_texture",
-            type -> switch (type) {
-                case "overlay_texture" -> Identifier.CODEC
-                        .xmap(OverlayTexture::new, OverlayTexture::texture)
-                        .fieldOf("texture");
+public interface Note {
+    ResourceKey<Registry<Note>> KEY = ResourceKey.createRegistryKey(Ism.id("note"));
+    Codec<Note> CODEC = IsmRegistries.NOTES.byNameCodec();
+    StreamCodec<RegistryFriendlyByteBuf, Note> STREAM_CODEC = ByteBufCodecs.registry(KEY);
 
-                default -> throw new IllegalStateException("Invalid type for NoteData: " + type);
-            });
+    NoteRenderer<? extends Note> renderer();
 
-    StreamCodec<ByteBuf, NoteData> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
+    interface SimpleTexture extends Note {
+        Identifier texture();
+    }
 
-    record OverlayTexture(Identifier texture) implements NoteData {
+    record WithBackground(Identifier texture) implements SimpleTexture {
+        @Override
+        public NoteRenderer<SimpleTexture> renderer() {
+            return NoteRenderer.SimpleTextureRenderer.WITH_BACKGROUND;
+        }
+    }
 
+    record NoBackground(Identifier texture) implements SimpleTexture {
+        @Override
+        public NoteRenderer<SimpleTexture> renderer() {
+            return NoteRenderer.SimpleTextureRenderer.WITHOUT_BACKGROUND;
+        }
     }
 }

@@ -7,22 +7,20 @@
   ],
   "pools": [
     {
-      "conditions": [
-        {
-          "condition": "minecraft:match_tool",
+      "condition": {
+          "type": "minecraft:match_tool",
           "predicate": {
             "items": "minecraft:shears"
           }
-        }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "ism:tristitia_vine_growth_bundle"
+          "name": "ism:tristitia_growth_bundle"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "ism:blocks/tristitia_vine_growth"
+  "random_sequence": "ism:blocks/tristitia_grass_growth"
 }
