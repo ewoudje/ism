@@ -1,0 +1,47 @@
+{
+  "attributes": {
+    "minecraft:audio/background_music": {
+      "default": {
+        "max_delay": 24000,
+        "min_delay": 12000,
+        "sound": "minecraft:music.overworld.badlands"
+      }
+    },
+    "minecraft:visual/sky_color": "#887CE2",
+    "minecraft:visual/fog_color": "#000000",
+    "minecraft:visual/sunrise_sunset_color": "#00000000",
+    "minecraft:visual/block_light_tint": "#FF889B",
+    "minecraft:visual/sky_light_factor": 0.8,
+    "minecraft:gameplay/increased_fire_burnout": true,
+    "minecraft:gameplay/monsters_burn": false,
+    "minecraft:gameplay/bed_rule": {
+      "can_sleep": "never",
+      "can_set_spawn": "never",
+      "error_message": {
+        "translate": "block.ism.bed.tristitia_no_sleep"
+      }
+    }
+  },
+  "carvers": [],
+  "creature_spawn_probability": 0.03,
+  "downfall": 1.0,
+  "effects": {
+    "foliage_color": "#722993",
+    "grass_color": "#712695",
+    "water_color": "#C984E9"
+  },
+  "features": [],
+  "has_precipitation": true,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": 2.0
+}

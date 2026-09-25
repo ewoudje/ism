@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.6
+        }
+      ],
+
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "ism:unseal_note"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "neoforge:definition_type": "ism:clingy_growth",
+  "particle": "ism:block/tristitia_vine_growth1",
+  "textures": [ "ism:block/tristitia_vine_growth1", "ism:block/tristitia_vine_growth2" ],
+  "transparent": true
+}
