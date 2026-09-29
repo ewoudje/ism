@@ -1,10 +1,10 @@
 {
   "neoforge:definition_type": "ism:clingy_growth",
-  "particle": "ism:block/tristitia_grass_growth",
-  "materials": [ "ism:block/tristitia_grass_growth" ],
+  "particle": "ism:block/growth/tristitia_grass_growth",
+  "materials": [ "ism:block/growth/tristitia_grass_growth" ],
   "transparent": false,
   "x-top": {
     "height": 2,
-    "materials": [ "ism:block/tristitia_grass_growth_plant" ]
+    "materials": [ "ism:block/growth/tristitia_grass_growth_plant" ]
   }
 }

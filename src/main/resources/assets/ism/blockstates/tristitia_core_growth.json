@@ -1,6 +1,6 @@
 {
   "neoforge:definition_type": "ism:clingy_growth",
-  "particle": "ism:block/tristitia_core_diagonal",
-  "materials": [ "ism:block/tristitia_core_diagonal" ],
+  "particle": "ism:block/growth/tristitia_core_growth",
+  "materials": [ "ism:block/growth/tristitia_core_growth" ],
   "transparent": false
 }

@@ -41,7 +41,15 @@
         ]
       },
       "spawn_costs": {}
-    }
+    },
+    "ism:attribute_modifier": [
+      {
+        "type": "ism:sadness",
+        "id": "ism:sadness_env",
+        "amount": 0.4,
+        "operation": "add_value"
+      }
+    ]
   },
   "carvers": [],
   "downfall": 1.0,

@@ -59,7 +59,8 @@ public class SimpleTristitiaGrowth implements GrowthCapability {
     public @Nullable BlockPos requestGrow(GrowthContext ctx) {
         var sample = ctx.sample();
         if (sample == null) return null;
-        if (sample.closest().availableEnergy() < 100) return null;
+        //TODO more advanced calculation?, want to prioritize when on low energy
+        if (sample.closest().availableEnergy() < 200 - sample.density()) return null;
 
         var directions = sidesToCheck.get(ctx.state());
         for (Direction direction : Direction.allShuffled(ctx.random())) {

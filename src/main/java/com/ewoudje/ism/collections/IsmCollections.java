@@ -6,11 +6,13 @@ public class IsmCollections {
 
     public static void register(IEventBus modBus) {
         IsmAttachments.REGISTERY.register(modBus);
+        IsmAttributes.REGISTRY.register(modBus);
         IsmBlockEntities.REGISTRY.register(modBus);
         IsmBlocks.REGISTRY.register(modBus);
         IsmCreativeTabs.REGISTRY.register(modBus);
         IsmDataComponents.REGISTRY.register(modBus);
         IsmEntities.REGISTRY.register(modBus);
+        IsmEnvironmentAttributes.REGISTRY.register(modBus);
         IsmItems.REGISTRY.register(modBus);
         IsmMenus.REGISTRY.register(modBus);
         IsmNotes.REGISTRY.register(modBus);

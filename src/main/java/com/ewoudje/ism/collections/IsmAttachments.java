@@ -2,6 +2,7 @@ package com.ewoudje.ism.collections;
 
 import com.ewoudje.ism.Ism;
 import com.ewoudje.ism.features.tristitia.growth.TristitiaGrowthWorldState;
+import com.ewoudje.ism.util.world.environment.EnvironmentAttributesModifier;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -11,12 +12,18 @@ import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class IsmAttachments {
     public static final DeferredRegister<AttachmentType<?>> REGISTERY = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, Ism.ID);
+
+    public static final Supplier<AttachmentType<EnvironmentAttributesModifier>> LAST_ENVIRONMENT_MODIFIERS = REGISTERY.register(
+            "last_environment_modifier",
+            () -> AttachmentType.builder(() -> new EnvironmentAttributesModifier(List.of())).build()
+    );
 
     public static final Supplier<AttachmentType<TristitiaGrowthWorldState>> TRISTITIA_GROWTH_STATE = REGISTERY.register("tristitia_growth_state",
             () -> AttachmentType.builder(TristitiaGrowthWorldState::new).build());
